@@ -27,15 +27,12 @@
   }
 
   .btn--small {
-    font-family: "Inter", sans-serif;
-    font-size: clamp(2rem, 1.5vw, 4.125rem);
-    font-weight: 100;
     line-height: 1.0;
     transition: font-weight 0.2s ease;
   }
 
   .btn--small.is-active {
-    font-weight: 300;
+    font-weight: 400;
   }
   
   .main-canvas {
@@ -65,6 +62,8 @@
     color: var(--keycolor);
     font-family: var(--font-body);
     font-optical-sizing: auto;
+    font-size: clamp(0.8rem, 1.5vw, 1.0rem);
+    font-weight: 200;
   }
 
   /* --- Doto: Display scale --- */
@@ -94,12 +93,12 @@
   /* --- Inter: Body scale --- */
 
   p {
-    font-family: var(--font-body);
+    margin-top: 0;
+    margin-bottom: 0;
     font-optical-sizing: auto;
     font-style: normal;
-    font-size: clamp(1rem, 1.5vw, 1.125rem); /* ~16px → 18px */
-    font-weight: 400;
-    line-height: 1.7;
+    line-height: 0.2;
+    text-indent: 1rem;
   }
 
   small {

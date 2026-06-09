@@ -124,7 +124,7 @@ export const projectRows: ProjectRowData[] = [
             layout: 'grid-5col',
             imagesTop: ['/P-Rossana/img1.png', '/P-Rossana/img2.png', '/P-Rossana/img3.png', '/P-Rossana/img4.png'],
             imagesBottom: ['/P-Rossana/b1.png', '/P-Rossana/b2.png', '/P-Rossana/b3.png', '/P-Rossana/b4.png'],
-            description: 'The campaign builds on a memory shared by almost every Italian: a loved one, usually a grandparent, passing a Rossana into your hand after your visit. To expand the brand\'s seasonal presence, this intimate gesture becomes the heart of a campaign centred around key festivities, such as Grandparents\' Day.',
+            description: 'The campaign builds on a memory shared by almost every Italian: a loved one, usually a grandparent, passing a Rossana into your hand after your visit. This gesture is key to expand the meaning of gifting a Rossana as a gesture of love. This in combination with season limited flavors expands the brand\'s seasonal presence. The campaign encorauges this intimate gesture by launching the limited flavours around key festivities, such as Grandparents\' Day.',
           }
         ],
       },
@@ -137,10 +137,16 @@ export const projectRows: ProjectRowData[] = [
         id: 'p5',
         title: 'Civiltà dei Dati',
         year: 2026,
-        tags: ['Campaign', 'Social'],
+        tags: ['Information design'],
         flex: 2,
-        description: 'Descrizione breve del progetto.',
-        slides: [],
+        role: '',
+        client: 'Civiltà dei Dati, Fondazione Leonardo',
+        description: 'For the June 2026 issue of Civiltà dei Dati, focused on the perils of perception, the infographic centres on two data points that expose the gap between what people believe and what is real: the concentration of wealth held by the top 1%, and the perceived versus actual share of immigrant population by country. \n The visual language draws from early radiography, as if the world itself were being held up to the light, each country examined like an organ, its issues laid bare beneath the surface. The map is rendered on a tilted sphere, the world captured as an imperfect, living body mid-scan, rather than a flat analytical projection.',
+        coverImage: '/P-CDD/copertina.png',
+        slides: [
+          {image: '/P-CDD/CDD2Mockup.png'},
+
+        ],
       },
       {
         id: 'p6',
@@ -153,6 +159,7 @@ export const projectRows: ProjectRowData[] = [
         description: 'The intro video for TEDxSapienzaU - On the Brink was crafted to tell the story of the identity itself. A square, symbol of stability. Then the breaking point: the liminal, suspended "on the brink" moment, dense with possible futures. Then an explosion of repetitions in vibrant colours, each one representing a different possible scenario. Designed to pull the audience into the theme before the first speech begins, both in the theatre and on YouTube.',
         slides: [
           { vimeoId: '1199688428' },
+          {}
         ],
       },
     ],
