@@ -1,0 +1,156 @@
+---
+import { projectRows } from '../data/projects';
+import ProjectDetail from './ProjectDetail.astro';
+
+function isVideo(src: string) {
+  return /\.(mp4|webm|ogg|mov)$/i.test(src);
+}
+---
+
+<style>
+  .card-overlay {
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+  .project-card:hover .card-overlay,
+  .project-card.is-open .card-overlay {
+    background-color: color-mix(in srgb, var(--keycolor) 60%, transparent);
+  }
+  .project-card.is-open .card-text { opacity: 1; }
+</style>
+
+<div class="projects-grid flex flex-col">
+  {projectRows.map((row) => (
+    <>
+      {/* ── Riga di card ─────────────────────────────────── */}
+      <div
+        class="projects-row flex gap-2 px-2 mb-2"
+        style={`height: ${row.height};`}
+      >
+        {row.projects.map((project) => (
+          <div
+            class="project-card relative cursor-pointer group"
+            style={`flex: ${project.flex};`}
+            data-project-id={project.id}
+          >
+            {/* Immagine o video copertina, o placeholder */}
+            <div class="absolute inset-0 overflow-hidden">
+              {project.coverImage
+                ? isVideo(project.coverImage)
+                  ? <video
+                      src={project.coverImage}
+                      class="w-full h-full object-cover block"
+                      autoplay
+                      loop
+                      muted
+                      playsinline
+                    />
+                  : <img src={project.coverImage} alt={project.title} class="w-full h-full object-cover block" />
+                : <div class="w-full h-full bg-neutral-200"></div>
+              }
+            </div>
+
+            {/* Rettangolo keycolor — rimane visibile con .is-open */}
+            <div class="card-overlay absolute inset-0 pointer-events-none"></div>
+
+            {/* Anno e tag — ancorati in alto */}
+            <div class="
+              card-text
+              absolute top-0 left-0 right-0
+              flex justify-between items-start gap-2
+              opacity-0 group-hover:opacity-100
+              transition-opacity duration-300
+              pointer-events-none
+              text-(--seccolor)
+            ">
+              <span class="text-xs font-light tracking-widest leading-none">
+                {project.year}
+              </span>
+              <div class="flex gap-1 flex-wrap justify-end">
+                {project.tags.map((tag) => (
+                  <span class="text-xs tracking-wide leading-tight">{tag}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Titolo — ancorato al fondo della card, offset in em = scala col font-size */}
+            <h4
+              class="
+                card-text
+                absolute left-0 right-0
+                text-(--seccolor) leading-tight
+                opacity-0 group-hover:opacity-100
+                transition-opacity duration-300
+                pointer-events-none
+              "
+              style="bottom: -0.3em;"
+            >{project.title}</h4>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Pannelli di dettaglio pre-renderizzati (max-height: 0) ── */}
+      {row.projects.map((project) => (
+        <ProjectDetail project={project} />
+      ))}
+    </>
+  ))}
+</div>
+
+<script>
+  const grid = document.querySelector('.projects-grid') as HTMLElement;
+
+  function getPanel(projectId: string): HTMLElement | null {
+    return grid.querySelector(`.project-detail[data-for="${projectId}"]`);
+  }
+
+  function getCard(projectId: string): HTMLElement | null {
+    return grid.querySelector(`.project-card[data-project-id="${projectId}"]`);
+  }
+
+  function openPanel(panel: HTMLElement) {
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+    getCard(panel.dataset.for!)?.classList.add('is-open');
+  }
+
+  function closePanel(panel: HTMLElement, cb?: () => void) {
+    panel.style.maxHeight = '0';
+    getCard(panel.dataset.for!)?.classList.remove('is-open');
+    if (cb) {
+      panel.addEventListener('transitionend', cb, { once: true });
+    }
+  }
+
+  grid.addEventListener('click', (e) => {
+    const card = (e.target as HTMLElement).closest('.project-card') as HTMLElement | null;
+    if (!card) return;
+
+    const projectId = card.dataset.projectId!;
+    const panel = getPanel(projectId);
+    if (!panel) return;
+
+    const isOpen = panel.style.maxHeight !== '0px' && panel.style.maxHeight !== '';
+
+    if (isOpen) {
+      closePanel(panel);
+      return;
+    }
+
+    // Chiude gli altri pannelli aperti, poi apre quello cliccato
+    const alreadyOpen = ([...grid.querySelectorAll('.project-detail')] as HTMLElement[]).filter(
+      (p) => p.style.maxHeight !== '0px' && p.style.maxHeight !== ''
+    );
+
+    if (alreadyOpen.length > 0) {
+      let closed = 0;
+      alreadyOpen.forEach((p) => {
+        closePanel(p, () => {
+          closed++;
+          if (closed === alreadyOpen.length) openPanel(panel);
+        });
+      });
+    } else {
+      openPanel(panel);
+    }
+  });
+</script>

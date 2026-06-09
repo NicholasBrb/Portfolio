@@ -1,0 +1,290 @@
+---
+// Layout base delle slide di dettaglio.
+// Anno, tag e titolo non servono qui: restano visibili sulla card (stato "open").
+// Personalizza questo file oppure crea un componente dedicato per un singolo progetto.
+
+import type { ProjectData } from '../data/projects';
+
+interface Props {
+  project: ProjectData;
+}
+const { project } = Astro.props;
+
+const slides = (project.slides ?? []).slice(0, 4);
+const count = slides.length > 0 ? slides.length : 4;
+
+// Testo del primo pannello: usa description del progetto se slide 1 non ha la propria
+const firstText = (i: number) =>
+  i === 0 ? (slides[0]?.description ?? project.description) : slides[i]?.description;
+---
+
+<div
+  class="project-detail w-full"
+  data-for={project.id}
+  style="max-height: 0; overflow: hidden; transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);"
+>
+  {Array.from({ length: count }).map((_, i) => {
+    const slide = slides[i];
+    const text = firstText(i);
+
+    if (slide?.vimeoId && !slide.layout) {
+      const src = `https://player.vimeo.com/video/${slide.vimeoId}?badge=0&autopause=0&player_id=0&app_id=58479&loop=1`;
+      return (
+        <section class="slide">
+          <div class="grid grid-cols-4 gap-2 p-2 w-full">
+
+            {/* Iframe (3/4) */}
+            <div class="col-span-3 overflow-hidden bg-neutral-100 aspect-4/3 self-start relative">
+              <iframe
+                src={src}
+                class="absolute inset-0 w-full h-full"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                title={project.title}
+              />
+            </div>
+
+            {/* Testo (1/4) — identico alla slide default */}
+            <div class="col-span-1 relative pl-2">
+              {i === 0 && (project.client || project.role) && (
+                <div class="absolute top-0 left-2 flex flex-col gap-3">
+                  {project.client && (
+                    <div>
+                      <p class="text-sm leading-none">Client</p>
+                      <p class="text-sm leading-none">{project.client}</p>
+                    </div>
+                  )}
+                  {project.role && (
+                    <div>
+                      <p class="text-sm leading-none">Role</p>
+                      <p class="text-sm leading-none">{project.role}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+              {text && (
+                <p class="absolute bottom-0 left-2 right-0 text-sm leading-snug opacity-70 whitespace-pre-line">{text}</p>
+              )}
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    if (slide?.layout === 'stack-video') {
+      return (
+        <section class="slide">
+          <div class="flex gap-2 p-2 w-full">
+
+            {/* Sinistra: 2 immagini sovrapposte */}
+            <div class="flex flex-col flex-1 gap-2 min-w-0">
+              <div class="flex-1 overflow-hidden bg-neutral-100 min-h-0">
+                {slide.images?.[0]
+                  ? <img src={slide.images[0]} alt={`${project.title} – top`} class=" h-full object-cover object-left block" />
+                  : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">img A</div>
+                }
+              </div>
+              <div class="flex-1 overflow-hidden bg-neutral-100 min-h-0">
+                {slide.images?.[1]
+                  ? <img src={slide.images[1]} alt={`${project.title} – bottom`} class=" h-full object-cover object-left block" />
+                  : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">img B</div>
+                }
+              </div>
+            </div>
+
+            {/* Destra: video in loop senza audio né controlli, ritagliato */}
+            <div class="flex-1 overflow-hidden bg-neutral-100 min-h-0 relative">
+              {slide.video
+                ? <video src={slide.video} autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover" />
+                : slide.vimeoId
+                ? <div class="absolute inset-0 overflow-hidden">
+                    <iframe
+                      src={`https://player.vimeo.com/video/${slide.vimeoId}?background=1&badge=0&autopause=0&player_id=0&app_id=58479`}
+                      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none"
+                      style="width: max(100%, calc(100vh * 16/9)); height: max(100%, calc(100vw * 9/16));"
+                      frameborder="0"
+                      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                      title=""
+                    />
+                  </div>
+                : <div class="absolute inset-0 flex items-center justify-center text-neutral-300 text-xs tracking-widest">video</div>
+              }
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    if (slide?.layout === 'grid-5col') {
+      return (
+        <section class="slide">
+          <div
+            class="grid gap-2 p-2 w-full h-full"
+            style="grid-template-columns: repeat(5, 1fr); grid-template-rows: auto 1fr;"
+          >
+
+            {/* Riga superiore: 4 immagini quasi-quadrate */}
+            {[0, 1, 2, 3].map(idx => (
+              <div class="aspect-square overflow-hidden bg-neutral-100 self-start">
+                {slide.imagesTop?.[idx]
+                  ? <img src={slide.imagesTop[idx]} alt={`${project.title} – top ${idx + 1}`} class="w-full h-full object-cover block" />
+                  : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">img {idx + 1}</div>
+                }
+              </div>
+            ))}
+
+            {/* Colonna 5: testo che occupa entrambe le righe */}
+            <div class="row-span-2 flex flex-col justify-end">
+              {slide.description
+                ? <p class="text-sm leading-snug opacity-70 whitespace-pre-line">{slide.description}</p>
+                : <div class="flex items-center justify-center w-full h-full text-neutral-300 text-xs tracking-widest">testo</div>
+              }
+            </div>
+
+            {/* Riga inferiore: 4 immagini alte (colonne 1–4) */}
+            {[0, 1, 2, 3].map(idx => (
+              <div class="overflow-hidden bg-neutral-100">
+                {slide.imagesBottom?.[idx]
+                  ? <img src={slide.imagesBottom[idx]} alt={`${project.title} – bottom ${idx + 1}`} class="w-full h-full object-cover block" />
+                  : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">img {idx + 5}</div>
+                }
+              </div>
+            ))}
+
+          </div>
+        </section>
+      );
+    }
+
+    if (slide?.layout === 'stack-text') {
+      return (
+        <section class="slide">
+          <div class="flex gap-2 p-2 w-full">
+
+            {/* Sinistra: 2 immagini sovrapposte */}
+            <div class="flex flex-col flex-1 gap-2 min-w-0">
+              <div class="flex-1 overflow-hidden bg-neutral-100 min-h-0">
+                {slide.images?.[0]
+                  ? <img src={slide.images[0]} alt={`${project.title} – top`} class="w-full h-full object-cover block" />
+                  : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">img A</div>
+                }
+              </div>
+              <div class="flex-1 overflow-hidden bg-neutral-100 min-h-0">
+                {slide.images?.[1]
+                  ? <img src={slide.images[1]} alt={`${project.title} – bottom`} class="w-full h-full object-cover block" />
+                  : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">img B</div>
+                }
+              </div>
+            </div>
+
+            {/* Destra: immagine in alto + testo in basso */}
+            <div class="flex flex-col flex-1 gap-2 min-w-0">
+              <div class="flex-1 overflow-hidden bg-neutral-100 min-h-0">
+                {slide.image
+                  ? <img src={slide.image} alt={`${project.title} – detail`} class="w-full h-full object-cover block" />
+                  : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">img C</div>
+                }
+              </div>
+              <div class="flex-1 flex items-end min-h-0">
+                {slide.description
+                  ? <p class="text-sm leading-snug opacity-70 whitespace-pre-line">{slide.description}</p>
+                  : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">testo</div>
+                }
+              </div>
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    if (slide?.layout === 'stack-poster') {
+      const ratio = slide.posterRatio ?? '210/297';
+      return (
+        <section class="slide">
+          <div class="flex gap-2 p-2 w-full">
+
+            {/* Sinistra: 2 immagini sovrapposte che riempiono lo spazio rimanente */}
+            <div class="flex flex-col flex-1 gap-2 min-w-0">
+              <div class="flex-1 overflow-hidden bg-neutral-100 min-h-0">
+                {slide.images?.[0]
+                  ? <img src={slide.images[0]} alt={`${project.title} – top`} class="w-full h-full object-cover block" />
+                  : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">img A</div>
+                }
+              </div>
+              <div class="flex-1 overflow-hidden bg-neutral-100 min-h-0">
+                {slide.images?.[1]
+                  ? <img src={slide.images[1]} alt={`${project.title} – bottom`} class="w-full h-full object-cover block" />
+                  : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">img B</div>
+                }
+              </div>
+            </div>
+
+            {/* Destra: poster — altezza = altezza slide, larghezza ricavata dall'aspect-ratio */}
+            <div
+              class="flex-none h-full overflow-hidden bg-neutral-100"
+              style={`aspect-ratio: ${ratio};`}
+            >
+              {slide.image
+                ? <img src={slide.image} alt={`${project.title} – poster`} class="w-full h-full object-cover block" />
+                : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">poster</div>
+              }
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    return (
+      <section class="slide">
+        <div class="grid grid-cols-4 gap-2 p-2 w-full">
+
+          {/* Immagine (3/4) */}
+          <div class="col-span-3 overflow-hidden bg-neutral-100 aspect-4/3 self-start">
+            {slide?.image ? (
+              <img
+                src={slide.image}
+                alt={`${project.title} – ${i + 1}`}
+                class="w-full h-full object-cover block"
+              />
+            ) : (
+              <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">
+                slide {i + 1}
+              </div>
+            )}
+          </div>
+
+          {/* Testo (1/4) */}
+          <div class="col-span-1 relative pl-2">
+            {/* Client e Ruolo — solo slide 1, ancorati al top dell'immagine */}
+            {i === 0 && (project.client || project.role) && (
+              <div class="absolute top-0 left-2 flex flex-col gap-3">
+                {project.client && (
+                  <div>
+                    <p class="text-[0.6rem] uppercase tracking-widest opacity-40 mb-0.5 leading-none">Client</p>
+                    <p class="text-sm leading-none">{project.client}</p>
+                  </div>
+                )}
+                {project.role && (
+                  <div>
+                    <p class="text-[0.6rem] uppercase tracking-widest opacity-40 mb-0.5 leading-none">Role</p>
+                    <p class="text-sm leading-none">{project.role}</p>
+                  </div>
+                )}
+              </div>
+            )}
+            {/* Descrizione — ancorata al bottom dell'immagine */}
+            {text && (
+              <p class="absolute bottom-0 left-2 right-0 text-sm leading-snug opacity-70 whitespace-pre-line">{text}</p>
+            )}
+          </div>
+
+        </div>
+      </section>
+    );
+  })}
+</div>
