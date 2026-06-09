@@ -1,0 +1,70 @@
+---
+
+const NavLinks = [
+    {
+        name : 'Nicholas Barbieri',
+        url: '#hero',
+        style: 'h4',
+    },
+    {
+        name : 'Projects',
+        url: '#projects',
+        style: 'small',
+    },
+    
+    {
+        name : 'Who am i?',
+        url: '#who',
+        style: 'small',
+    },
+    {
+        name : 'Contact me',
+        url: '#contacts',
+        style: 'small',
+    }
+]
+---
+
+<nav class="fixed top-0 left-0 h-screen z-50 mix-blend-difference pointer-events-none flex flex-col justify-between" style="color: #F5CF00;">
+    <div class="p-8 pt-1">
+        <ul class="nav-links pointer-events-none" role="navigation">
+            {NavLinks.map(link => (
+                <li role="none">
+                    <a href={link.url} class={`btn btn--${link.style} pointer-events-auto`} nav-link>{link.name}</a>
+                </li>
+            ))}
+        </ul>
+    </div>
+    <div class="pl-8">
+        <slot name="nav-bottom">
+            <small>Copyright © 2026 Nicholas Barbieri - <a href="mailto:nick_flick@outlook.com">nick_flick@outlook.com</a></small>
+        </slot>
+    </div>
+</nav>
+
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>('[nav-link]');
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const id = entry.target.id;
+        links.forEach((link) => {
+          const matches = link.getAttribute('href') === `#${id}`;
+          link.classList.toggle('is-active', matches);
+        });
+      });
+    },
+    { threshold: 0.4 }
+  );
+
+  links.forEach((link) => {
+    const id = link.getAttribute('href')?.slice(1);
+    if (id) {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    }
+  });
+</script>
+

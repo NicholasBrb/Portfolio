@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Doto:wght,ROND@100..900,0..100&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import "tailwindcss";
+
+/* ─── Design Tokens ──────────────────────────────────────────── */
+:root {
+  --seccolor: #F5F2EE;
+  --keycolor: #0023F5;
+
+  --font-display: "Doto", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+@layer components {
+  @layer components {
+  .btn--h4 {
+    font-family: "Doto", sans-serif;
+    font-variation-settings: "ROND" 99;
+    font-size: clamp(6.25rem, 2.5vw, 8.75rem);
+    font-weight: 200;
+    line-height: 0.6;
+    letter-spacing: -0.04em;
+    transition: font-weight 0.2s ease;
+  }
+
+  .btn--h4.is-active {
+    font-weight: 500;
+  }
+
+  .btn--small {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(2rem, 1.5vw, 4.125rem);
+    font-weight: 100;
+    line-height: 1.0;
+    transition: font-weight 0.2s ease;
+  }
+
+  .btn--small.is-active {
+    font-weight: 300;
+  }
+  
+  .main-canvas {
+    width: 85%;
+    margin-left: auto;
+    isolation: isolate;
+    background-color: var(--seccolor);
+  }
+
+  /* ─── Slide: on-screen ─────────────────────────── */
+  .slide {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 0.5rem;
+  }
+}
+}
+
+
+
+/* ─── Base Layer ─────────────────────────────────────────────── */
+@layer base {
+  body {
+    background-color: var(--seccolor);
+    color: var(--keycolor);
+    font-family: var(--font-body);
+    font-optical-sizing: auto;
+  }
+
+  /* --- Doto: Display scale --- */
+
+  h1 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "ROND" 100;
+    font-size: clamp(1.5rem, 6vw, 4rem);   /* ~40px → 80px */
+    font-weight: 600;                        /* bold display — modifica qui */
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  h4 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "ROND" 100;
+    font-size: clamp(0.25rem, 2.5vw, 2.75rem); /* ~20px → 28px */
+    font-weight: 800;                            /* leggero — modifica qui */
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+  }
+
+  /* --- Inter: Body scale --- */
+
+  p {
+    font-family: var(--font-body);
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-size: clamp(1rem, 1.5vw, 1.125rem); /* ~16px → 18px */
+    font-weight: 400;
+    line-height: 1.7;
+  }
+
+  small {
+    font-family: var(--font-body);
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-size: clamp(0.55rem, 1vw, 0.675rem); /* ~12px → 14px */
+    font-weight: 100;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+
+  footer {
+
+    margin-bottom: auto;
+  }
+
+ }
+
+
+/* ─── Print: 16:9 slides ─────────────────────────────────────── */
+@media print {
+  @page {
+    /* PowerPoint widescreen: 33.867cm × 19.05cm = esattamente 16:9 */
+    size: 33.867cm 19.05cm;
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  footer {
+    display: none;
+  }
+
+  /* position: fixed in Chromium → ripetuto su ogni pagina PDF */
+  nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20%;
+    height: 100vh;
+  }
+
+  .main-canvas {
+    width: 80%;
+    margin-left: 20%;
+    margin-right: 0;
+  }
+
+  .slide {
+    width: 100%;
+    height: 19.05cm; /* altezza esplicita = una pagina 16:9 */
+    aspect-ratio: unset;
+    margin: 0;
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+  }
+
+  .slide:last-child {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+}
