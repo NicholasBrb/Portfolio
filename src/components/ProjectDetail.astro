@@ -51,14 +51,14 @@ const firstText = (i: number) =>
                 <div class="absolute top-0 left-2 flex flex-col gap-3">
                   {project.client && (
                     <div>
-                      <p class="text-sm leading-none">Client</p>
-                      <p class="text-sm leading-none">{project.client}</p>
+                      <p class="text-sm leading-none" style="text-indent:0">Client</p>
+                      <p class="text-sm leading-none" style="text-indent:0">{project.client}</p>
                     </div>
                   )}
                   {project.role && (
                     <div>
-                      <p class="text-sm leading-none">Role</p>
-                      <p class="text-sm leading-none">{project.role}</p>
+                      <p class="text-sm leading-none" style="text-indent:0">Role</p>
+                      <p class="text-sm leading-none" style="text-indent:0">{project.role}</p>
                     </div>
                   )}
                 </div>
@@ -188,9 +188,9 @@ const firstText = (i: number) =>
                   : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">img C</div>
                 }
               </div>
-              <div class="flex-1 flex items-end min-h-0">
+              <div class="flex-1 flex flex-col justify-end min-h-0">
                 {slide.description
-                  ? <p class="text-sm leading-snug opacity-70 whitespace-pre-line">{slide.description}</p>
+                  ? <p class="text-sm leading-snug whitespace-pre-line">The rebranding conceived for Rossana is born with the goal of modernising its identity without losing the bond with its heritage. The new visual identity system stems from the desire to strengthen brand recognition, make it more appealing to new generations, and communicate the candy not merely as a product, but as a gesture of affection and a tradition to be shared.  </p> <p class="text-sm leading-snug whitespace-pre-line">The project is grounded in a reinterpretation of the historic logo, keeping its neo-gothic soul intact. The distinctive element is the stylised silhouette of the candy, integrated between the two "s"s of the logotype: a subtle yet memorable detail that becomes the brand's defining symbol. A new palette enriches the iconic red with options for new flavours that speak to the creaminess of the Rossana heart. New paper packaging shifts the tactile experience in store, welcoming a new generation of consumers.</p>
                   : <div class="w-full h-full flex items-center justify-center text-neutral-300 text-xs tracking-widest">testo</div>
                 }
               </div>
@@ -265,21 +265,21 @@ const firstText = (i: number) =>
               <div class="absolute top-0 left-2 flex flex-col gap-3">
                 {project.client && (
                   <div>
-                    <p class="text-[0.6rem] uppercase tracking-widest opacity-40 mb-0.5 leading-none">Client</p>
-                    <p class="text-sm leading-none">{project.client}</p>
+                    <p class="text-sm leading-none" style="text-indent:0">Client</p>
+                    <p class="text-sm leading-none" style="text-indent:0">{project.client}</p>
                   </div>
                 )}
                 {project.role && (
                   <div>
-                    <p class="text-[0.6rem] uppercase tracking-widest opacity-40 mb-0.5 leading-none">Role</p>
-                    <p class="text-sm leading-none">{project.role}</p>
+                    <p class="text-sm leading-none" style="text-indent:0">Role</p>
+                    <p class="text-sm leading-none" style="text-indent:0">{project.role}</p>
                   </div>
                 )}
               </div>
             )}
             {/* Descrizione — ancorata al bottom dell'immagine */}
             {text && (
-              <p class="absolute bottom-0 left-2 right-0 text-sm leading-snug opacity-70 whitespace-pre-line">{text}</p>
+              <p class="absolute bottom-0 left-2 right-0 text-sm leading-snug whitespace-pre-line">{text}</p>
             )}
           </div>
 
