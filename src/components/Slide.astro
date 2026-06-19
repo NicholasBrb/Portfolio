@@ -2,12 +2,13 @@
 interface Props {
   id?: string;
   class?: string;
+  gridClass?: string;
 }
-const { id, class: className } = Astro.props;
+const { id, class: className, gridClass } = Astro.props;
 ---
 
 <section class:list={['slide', className]} id={id}>
-  <div class="grid grid-cols-4 gap-2 ps-2 h-full w-full">
+  <div class:list={['grid grid-cols-4 gap-2 ps-2 h-full w-full', gridClass]}>
     <slot />
   </div>
 </section>

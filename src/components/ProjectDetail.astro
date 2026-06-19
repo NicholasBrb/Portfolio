@@ -245,7 +245,16 @@ const firstText = (i: number) =>
 
           {/* Immagine (3/4) */}
           <div class="col-span-3 overflow-hidden bg-neutral-100 aspect-4/3 self-start">
-            {slide?.image ? (
+            {slide?.video ? (
+              <video
+                src={slide.video}
+                autoplay
+                loop
+                muted
+                playsinline
+                class="w-full h-full object-cover block"
+              />
+            ) : slide?.image ? (
               <img
                 src={slide.image}
                 alt={`${project.title} – ${i + 1}`}

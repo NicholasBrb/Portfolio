@@ -49,14 +49,8 @@ export const projectRows: ProjectRowData[] = [
         description: 'Prendersi cura started as an open call for photography projects whi',
         coverImage: '/opt/P-Sambre/Copertina.webm',
         slides: [
-          // slide 1: usa il campo description del progetto + questa immagine
-          // { image: '/opt/projects/p1/s1.webp', description: 'Caption opzionale' },
-          // slide 2
-          // { image: '/opt/projects/p1/s2.webp', description: '' },
-          // slide 3
-          // { image: '/opt/projects/p1/s3.webp' },
-          // slide 4
-          // { image: '/opt/projects/p1/s4.webp' },
+          {video: '/opt/P-Sambre/VideoIG.webm'},
+          {}
         ],
       },
       {
@@ -156,10 +150,10 @@ export const projectRows: ProjectRowData[] = [
         role: 'Storyboarding, motion designer, visual identity design',
         client: 'TEDxSapienzaU',
         flex: 2,
+        coverImage: '/opt/P-Brink/Copertina.webm',
         description: 'The intro video for TEDxSapienzaU - On the Brink was crafted to tell the story of the identity itself. A square, symbol of stability. Then the breaking point: the liminal, suspended "on the brink" moment, dense with possible futures. Then an explosion of repetitions in vibrant colours, each one representing a different possible scenario. Designed to pull the audience into the theme before the first speech begins, both in the theatre and on YouTube.',
         slides: [
           { vimeoId: '1199688428' },
-          {}
         ],
       },
     ],
@@ -168,7 +162,7 @@ export const projectRows: ProjectRowData[] = [
     height: '20rem',
     projects: [
       {
-        id: 'p5',
+        id: 'p7',
         title: 'Para Doxa',
         year: 2023,
         tags: ['Campaign', 'Social'],
@@ -177,13 +171,16 @@ export const projectRows: ProjectRowData[] = [
         slides: [],
       },
       {
-        id: 'p6',
-        title: 'Shader',
-        year: 2021,
+        id: 'p8',
+        title: 'AperiPrinting',
+        year: 2026,
         tags: ['Print'],
         flex: 1,
+        coverImage: '/opt/P-Aperiprinting/DSCF0351.webp',
         description: 'Descrizione breve del progetto.',
-        slides: [],
+        slides: [
+          {video: '/opt/P-Aperiprinting/VideoCopertina.webm'},
+        ],
       },
     ],
   },
