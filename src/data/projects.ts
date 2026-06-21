@@ -3,7 +3,7 @@
 export interface SlideData {
   image?: string;                          // immagine principale (default: area grande; stack-poster: poster destra)
   description?: string;                    // testo/caption della slide
-  layout?: 'stack-poster' | 'stack-video' | 'stack-text' | 'grid-5col'; // layout multi-elemento
+  layout?: 'stack-poster' | 'stack-video' | 'stack-text' | 'grid-5col' | 'full-image' | 'image-text'; // layout multi-elemento
   images?: [string?, string?];             // [top-sx, bottom-sx] per layout stack-*
   posterRatio?: string;                    // proporzioni poster, es. '210/297' (A4) — default '210/297'
   video?: string;                          // path video per layout stack-video, es. '/opt/projects/p3/clip.webm'
@@ -22,7 +22,7 @@ export interface ProjectData {
   role?: string;          // ruolo nel progetto
   description?: string;   // descrizione breve (appare nella slide 1 del dettaglio)
   flex: number;           // larghezza relativa nella riga: 1 = una col, 2 = due col, 3 = tre col
-  slides?: SlideData[];   // max 4 slide; se assenti vengono mostrati 4 placeholder
+  slides?: SlideData[];   // se assenti vengono mostrati 4 placeholder
 }
 
 export interface ProjectRowData {
@@ -49,8 +49,8 @@ export const projectRows: ProjectRowData[] = [
         description: 'Prendersi cura started as an open call for photography projects whi',
         coverImage: '/opt/P-Sambre/Copertina.webm',
         slides: [
-          {video: '/opt/P-Sambre/VideoIG.webm'},
-          {}
+          {video: '/opt/P-Sambre/Videovariig.webm'},
+          {video: '/opt/P-Sambre/noscritta.webm', layout:'full-image'},
         ],
       },
       {
@@ -112,7 +112,7 @@ export const projectRows: ProjectRowData[] = [
             layout: 'stack-text',
             images: ['/opt/P-Rossana/loghi.webp', '/opt/P-Rossana/100anni.webp'],
             image: '/opt/P-Rossana/Scatole.webp',
-            description: "The rebranding conceived for Rossana is born with the goal of modernising its identity without losing the bond with its heritage. The new visual identity system stems from the desire to strengthen brand recognition, make it more appealing to new generations, and communicate the candy not merely as a product, but as a gesture of affection and a tradition to be shared. \n The project is grounded in a reinterpretation of the historic logo, keeping its neo-gothic soul intact. The distinctive element is the stylised silhouette of the candy, integrated between the two \"s\"s of the logotype: a subtle yet memorable detail that becomes the brand's defining symbol. A new palette enriches the iconic red with options for new flavours that speak to the creaminess of the Rossana heart. New paper packaging shifts the tactile experience in store, welcoming a new generation of consumers.",
+            description: "The rebranding conceived for Rossana is born with the goal of modernising its identity without losing the bond with its heritage. The new visual identity system stems from the desire to strengthen brand recognition, make it more appealing to new generations, and communicate the candy not merely as a product, but as a gesture of affection and a tradition to be shared.\n\nThe project is grounded in a reinterpretation of the historic logo, keeping its neo-gothic soul intact. The distinctive element is the stylised silhouette of the candy, integrated between the two \"s\"s of the logotype: a subtle yet memorable detail that becomes the brand's defining symbol. A new palette enriches the iconic red with options for new flavours that speak to the creaminess of the Rossana heart. New paper packaging shifts the tactile experience in store, welcoming a new generation of consumers.",
           },
           {
             layout: 'grid-5col',
@@ -135,7 +135,7 @@ export const projectRows: ProjectRowData[] = [
         flex: 2,
         role: '',
         client: 'Civiltà dei Dati, Fondazione Leonardo',
-        description: 'For the June 2026 issue of Civiltà dei Dati, focused on the perils of perception, the infographic centres on two data points that expose the gap between what people believe and what is real: the concentration of wealth held by the top 1%, and the perceived versus actual share of immigrant population by country. \n The visual language draws from early radiography, as if the world itself were being held up to the light, each country examined like an organ, its issues laid bare beneath the surface. The map is rendered on a tilted sphere, the world captured as an imperfect, living body mid-scan, rather than a flat analytical projection.',
+        description: 'For the June 2026 issue of Civiltà dei Dati, focused on the perils of perception, the infographic centres on two data points that expose the gap between what people believe and what is real: the concentration of wealth held by the top 1%, and the perceived versus actual share of immigrant population by country. \n\n The visual language draws from early radiography, as if the world itself were being held up to the light, each country examined like an organ, its issues laid bare beneath the surface. The map is rendered on a tilted sphere, the world captured as an imperfect, living body mid-scan, rather than a flat analytical projection.',
         coverImage: '/opt/P-CDD/copertina.webp',
         slides: [
           {image: '/opt/P-CDD/CDD2Mockup.webp'},
@@ -174,12 +174,18 @@ export const projectRows: ProjectRowData[] = [
         id: 'p8',
         title: 'AperiPrinting',
         year: 2026,
-        tags: ['Print'],
+        tags: ['Illustration','Event organization'],
         flex: 1,
+        role: 'Event concept, organization, illustration',
         coverImage: '/opt/P-Aperiprinting/DSCF0351.webp',
-        description: 'Descrizione breve del progetto.',
+        description: 'AperiPrinting was an event designed to let TEDxSapienzaU\'s community, followers and volunteers alike, create their own dream merch, in a fun, accessible and lighthearted way. Organizing it meant making decisions from large scale experience design to small scale like printing method, and designing matrixes that would engage peoples creativity. We landed on 3D-printed stamps: accessible both in cost and ease of use. \n\nBeyond the association\'s logos, the team designed four illustration sets, each representing a different theme, which participants could freely combine into their own composition. The set I designed captures the rhythmic, chaotic dance of event setup, something anyone who has ever volunteered for an organization like this knows deep in their bones.',
         slides: [
-          {video: '/opt/P-Aperiprinting/VideoCopertina.webm'},
+          {video: '/opt/P-Aperiprinting/VideoCopertina2.webm'},
+          {image: '/opt/P-Aperiprinting/DSCF0302.webp', layout: 'full-image'},
+          {image: '/opt/P-Aperiprinting/Copertina.webp', layout: 'image-text', description: 'The figures are abstract and geometric so to be easibly printed, but expressive in their dynamic positions'},
+          {image: '/opt/P-Aperiprinting/DSCF0155.webp', layout: 'full-image'},
+          {image: '/opt/P-Aperiprinting/DSCF0385.webp', layout: 'full-image'},
+          {image: '/opt/P-Aperiprinting/DSCF0495.webp', layout: 'full-image'},
         ],
       },
     ],

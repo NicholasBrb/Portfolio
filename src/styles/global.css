@@ -12,6 +12,24 @@
 
 @layer components {
   @layer components {
+
+  /* ─── Dot dividers ──────────────────────────────────────────── */
+  .divider-h,
+  .divider-v {
+    font-family: var(--font-display);
+    font-variation-settings: "ROND" 100;
+    font-weight: 200;
+    font-size: clamp(0.25rem, 2.5vw, 2.75rem); /* ← adjust to control dot size */
+    line-height: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+  }
+
+  .divider-v {
+    writing-mode: vertical-rl;
+  }
+
   .btn--h4 {
     font-family: "Doto", sans-serif;
     font-variation-settings: "ROND" 99;
@@ -98,7 +116,7 @@
     font-optical-sizing: auto;
     font-style: normal;
     line-height: 1.15;
-    text-indent: 1.3rem;
+    text-indent: 1.5rem;
     text-align: justify;
   }
 
