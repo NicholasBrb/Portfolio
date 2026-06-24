@@ -68,7 +68,21 @@
     align-items: stretch;
     margin-bottom: 0.5rem;
   }
+
 }
+}
+
+/* ─── External links (unlayered → beats any Tailwind preflight) ── */
+.link-ext {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 0.5px;
+  text-underline-offset: 1px;
+}
+
+.link-ext:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
 }
 
 

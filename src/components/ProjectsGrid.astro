@@ -66,10 +66,8 @@ function isVideo(src: string) {
               <span class="text-xs font-light tracking-widest leading-none">
                 {project.year}
               </span>
-              <div class="flex gap-1 flex-wrap justify-end">
-                {project.tags.map((tag) => (
-                  <span class="text-xs tracking-wide leading-none">{tag}</span>
-                ))}
+              <div class="flex flex-wrap justify-end">
+                <span class="text-xs tracking-wide leading-none">{project.tags.join(', ')}</span>
               </div>
             </div>
 
