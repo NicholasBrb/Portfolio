@@ -120,19 +120,12 @@ export const projectRows: ProjectRowData[] = [
         slides: [
           { image: '/opt/P-Rossana/Packaging.webp'},
           {image: '/opt/P-Rossana/Scatole.webp', layout: 'full-image'},
+          {image: '/opt/P-Rossana/loghi.webp', layout:'image-text', description: 'The rebranding conceived for Rossana is born with the goal of modernising its identity without losing the bond with its heritage. The new visual identity system stems from the desire to strengthen brand recognition, make it more appealing to new generations, and communicate the candy not merely as a product, but as a gesture of affection and a tradition to be shared.\n\nThe project is grounded in a reinterpretation of the historic logo, keeping its neo-gothic soul intact. The distinctive element is the stylised silhouette of the candy, integrated between the two \"s\"s of the logotype: a subtle yet memorable detail that becomes the brand\'s defining symbol. A new palette enriches the iconic red with options for new flavours that speak to the creaminess of the Rossana heart. New paper packaging shifts the tactile experience in store, welcoming a new generation of consumers.'},
+          {image: '/opt/P-Rossana/100anni.webp', layout: 'full-image'},
+          {image: '/opt/P-Rossana/b3.webp', layout:'image-text', description: 'The campaign builds on a memory shared by almost every Italian: a loved one, usually a grandparent, passing a Rossana into your hand after your visit.\nThis gesture is key to expand the meaning of gifting a Rossana as a gesture of love. This in combination with season limited flavors expands the brand\'s seasonal presence. The campaign encourages this intimate gesture by launching the limited flavours around key festivities, such as Grandparents\' Day.'},
+          {images:['/opt/P-Rossana/img1.webp', '/opt/P-Rossana/b1.webp'], layout:'two-images'},
+          {images:['/opt/P-Rossana/b2.webp', '/opt/P-Rossana/img2.webp'], layout:'two-images'},
           
-          {
-            layout: 'stack-text',
-            images: ['/opt/P-Rossana/loghi.webp', '/opt/P-Rossana/100anni.webp'],
-            image: '/opt/P-Rossana/Scatole.webp',
-            description: "The rebranding conceived for Rossana is born with the goal of modernising its identity without losing the bond with its heritage. The new visual identity system stems from the desire to strengthen brand recognition, make it more appealing to new generations, and communicate the candy not merely as a product, but as a gesture of affection and a tradition to be shared.\n\nThe project is grounded in a reinterpretation of the historic logo, keeping its neo-gothic soul intact. The distinctive element is the stylised silhouette of the candy, integrated between the two \"s\"s of the logotype: a subtle yet memorable detail that becomes the brand's defining symbol. A new palette enriches the iconic red with options for new flavours that speak to the creaminess of the Rossana heart. New paper packaging shifts the tactile experience in store, welcoming a new generation of consumers.",
-          },
-          {
-            layout: 'grid-5col',
-            imagesTop: ['/opt/P-Rossana/img1.webp', '/opt/P-Rossana/img2.webp', '/opt/P-Rossana/img3.webp', '/opt/P-Rossana/img4.webp'],
-            imagesBottom: ['/opt/P-Rossana/b1.webp', '/opt/P-Rossana/b2.webp', '/opt/P-Rossana/b3.webp', '/opt/P-Rossana/b4.webp'],
-            description: 'The campaign builds on a memory shared by almost every Italian: a loved one, usually a grandparent, passing a Rossana into your hand after your visit. This gesture is key to expand the meaning of gifting a Rossana as a gesture of love. This in combination with season limited flavors expands the brand\'s seasonal presence. The campaign encourages this intimate gesture by launching the limited flavours around key festivities, such as Grandparents\' Day.',
-          }
         ],
       },
     ],
@@ -193,7 +186,7 @@ export const projectRows: ProjectRowData[] = [
           {vimeoId: '1203391916', layout: 'hero-video'},
           {image: '/opt/P-Paradoxa/tickets.webp', layout: 'full-image'},
           {image: '/opt/P-Paradoxa/speaker.webp', layout: 'full-image'},
-          {image: 'P-Paradoxa/mood.png', layout: 'image-text', description:'The concept draws from the impossible shapes of Penrose and Reutersvärd, reimagining them as an impossible labyrinth, a space where geometric rules bend and give rise to the key artwork of Para Doxa. The strict isometric geometry of the labyrinth acts as a dynamic framework for a logo that is ever-changing yet always coherent, reflecting the ability to hold multiple perspectives at once, just as every paradox brought to the stage does. Inhabiting the labyrinth are images of people and animals, each representing a different paradox, an easter egg for those able to recognise them. \n\nThese figures are treated with a halftoning effect inspired by Escher\'s xilographies, producing a monochromatic imagery that complements the colourful labyrinth. The same geometric logic extends to the typography, with letterforms distorted along the isometric angles of the labyrinth, most notably in the logo and in key titles such as the speaker cards.'},
+          {image: 'P-Paradoxa/mood.png', layout: 'image-text', description:'The concept draws from the impossible shapes of Penrose and Reutersvärd, reimagining them as an impossible labyrinth, a space where geometric rules bend and give rise to the key artwork of Para Doxa.\nThe strict isometric geometry of the labyrinth acts as a dynamic framework for a logo that is ever-changing yet always coherent, reflecting the ability to hold multiple perspectives at once, just as every paradox brought to the stage does. Inhabiting the labyrinth are images of people and animals, each representing a different paradox, an easter egg for those able to recognise them. \n\nThese figures are treated with a halftoning effect inspired by Escher\'s xilographies, producing a monochromatic imagery that complements the colourful labyrinth. \nThe same geometric logic extends to the typography, with words distorted along the isometric angles of the labyrinth, most notably in the logo and in key titles such as the speaker cards.'},
           {image: '/opt/P-Paradoxa/abbozzo.webp', layout: 'full-image'},
           {image: '/opt/P-Paradoxa/booklets.webp', layout: 'full-image'},
           {images: ['/opt/P-Paradoxa/Badges.webp','/opt/P-Paradoxa/Pepa.webp'], layout: 'two-images'},
