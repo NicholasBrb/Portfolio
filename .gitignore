@@ -25,3 +25,8 @@ pnpm-debug.log*
 
 # media optimization scripts (local only)
 scripts/
+
+# raw/unoptimized source media (only public/opt/* webp/webm builds get committed)
+public/P-*/
+public/Herovideo4.mp4
+public/Herovideo4.webm
