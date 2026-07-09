@@ -3,7 +3,7 @@
 export interface SlideData {
   image?: string;                          // immagine principale (default: area grande; stack-poster: poster destra)
   description?: string;                    // testo/caption della slide
-  layout?: 'stack-poster' | 'stack-video' | 'stack-text' | 'grid-5col' | 'full-image' | 'two-images' | 'image-text' | 'hero-video'; // layout multi-elemento
+  layout?: 'stack-poster' | 'stack-video' | 'full-image' | 'two-images' | 'image-text' | 'hero-video'; // layout multi-elemento
   images?: [string?, string?];             // [top-sx, bottom-sx] per layout stack-*
   posterRatio?: string;                    // proporzioni poster, es. '210/297' (A4) — default '210/297'
   video?: string;                          // path video per layout stack-video, es. '/opt/projects/p3/clip.webm'
@@ -51,14 +51,14 @@ export const projectRows: ProjectRowData[] = [
         tags: ['Visual identity'],
         flex: 2,
         client: 'Sambre Collective',
-        role: 'Visual Identity Designer',
-        description: 'SAMBRE is a photography collective whose latest open call, prendersi cura, invites photographers to explore care in its broadest and most layered sense, not as therapy or repair, but as attention, presence, and relational responsibility. The visual identity is built around a single organic metaphor: a mold, or fungi, expanding from the logotype and other hotpoints. Like care itself, slime molds have no center, no hierarchy, no fixed boundary, they grow by touch, spreading wherever conditions allow life to continue. The form grows as a reminder that acts of care are never isolated: each one propagates another, building webs of relation across bodies, spaces, and communities.\n\n"The care that has been \'passed on\' [...] continues to circulate, not necessarily morally or intentionally, in an embodied way, or simply embedded in the world, environments, infrastructures that have been marked by that care.\" \n\nMaría Puig de la Bellacasa, Matters of Care, University of Minnesota Press, 2017',
+        role: 'Visual identity designer',
+        description: 'Sambre is a photography collective whose latest open call, Prendersi cura, invites photographers to explore care in its broadest and most layered sense, not as therapy or repair, but as attention, presence, and relational responsibility. The visual identity is built around a single organic metaphor: a mold, or fungi, expanding from the logotype and other hotspots. Like care itself, slime molds have no center, no hierarchy, no fixed boundary, they grow by touch, spreading wherever conditions allow life to continue. The form grows as a reminder that acts of care are never isolated: each one propagates another, building webs of relation across bodies, spaces, and communities.\n\n"The care that has been \'passed on\' [...] continues to circulate, not necessarily morally or intentionally, in an embodied way, or simply embedded in the world, environments, infrastructures that have been marked by that care.\" \n\nMaría Puig de la Bellacasa, Matters of Care, 2017',
         coverImage: '/opt/P-Sambre/Copertina.webm',
-        links:[{label: 'Prendersi Cura', url:'https://sambrecollective.com/opencall-3'}],
+        links:[{label: 'View open call', url:'https://sambrecollective.com/opencall-3'}],
         slides: [
           {video: '/opt/P-Sambre/Videovariig.webm'},
           {video: '/opt/P-Sambre/noscritta.webm', layout:'full-image'},
-          {image: '', layout:'image-text', description: 'The typographic choice to write the call in lowercase reflects the collective\'s intent: care as it appears here is not institutional or ceremonial, but everyday and horizontal. It belongs to everyone. \n\nThe color palette extends Sambre\'s existing green identity while introducing a sharp neon green to single out care as something that demands to be seen. Often rendered invisible by the systems that exploit it, care is here made luminous, loud, organic, impossible to overlook.'},
+          {image: '', layout:'image-text', description: 'The typographic choice to write the call in lowercase reflects the collective\'s intent: care as it appears here is not institutional or ceremonial, but everyday and horizontal. It belongs to everyone. \n\nThe color palette extends Sambre\'s existing green identity while introducing a sharp neon green to single out care as something that demands to be seen. Often rendered invisible by the systems that exploit it, care is here made luminous, loud, organic, impossible to overlook.\n\nThis project is ongoing, stay tuned for the exhibitions identity!'},
         ],
       },
       {
@@ -66,12 +66,12 @@ export const projectRows: ProjectRowData[] = [
         title: '4th edition celebration',
         coverImage: '/opt/P-Poster/copertinaposter.webp',
         year: 2025,
-        tags: ['Poster'],
+        tags: ['Print design'],
         flex: 2,
         client: 'TEDxSapienzaU',
         role: 'Print designer',
-        links:[{label: 'TEDxSapienzaU', url:'https://www.tedxsapienzau.com/'},],
-        description: 'To celebrate the fourth edition of TEDxSapienzaU, I designed a poster to speak to volunteers past and present. A grid of forty dots echoes the forty ideas brought to the stage, four emblematic speeches from different editions serve as backdrop. In the foreground, four red carpets unfold like pages of memories and roll out as if in set-up, evoking the hours of work behind the scenes.',
+        links:[{label: 'Visit TEDxSapienzaU', url:'https://www.tedxsapienzau.com/'},],
+        description: 'Designed to celebrate the fourth edition of TEDxSapienzaU, this poster speaks to volunteers past and present. A grid of forty dots echoes the forty ideas brought to the stage; four emblematic speeches from past editions serve as backdrop. In the foreground, four red carpets unfold like pages of memory, rolling out as if mid set-up, evoking the hours of work behind the scenes.',
         slides: [
           { image: '/opt/P-Poster/Mockup.webp'},
           {
@@ -79,7 +79,7 @@ export const projectRows: ProjectRowData[] = [
             images: ['/opt/P-Poster/Zoom1.webp','/opt/P-Poster/Zoom2.webp'],
             image: '/opt/P-Poster/Poster.webp'
           },
-          {image: '/opt/P-Poster/reference.webp', layout: 'image-text', description:'A peek in my process: a physical model\'s picture was traced to draw the main protagonist of the composition.'},
+          {image: '/opt/P-Poster/reference.webp', layout: 'image-text', description:'A peek at my process: the picture of a physical model was traced to draw the main protagonist of the composition.'},
           
         ],
       },
@@ -112,15 +112,15 @@ export const projectRows: ProjectRowData[] = [
         title: 'Rossana',
         year: 2025,
         coverImage: '/opt/P-Rossana/Copertina_.webp',
-        tags: ['Brand design', '3D design'],
+        tags: ['Visual identity', '3D design'],
         flex: 3,
-        client: 'University project, Rossana',
+        client: 'Rossana, University brief',
         role: 'Graphic designer',
-        description: 'For Rossana, the hard candy with a soft heart that has spanned generations, the future is born from a conscious return to its roots: a rebranding that aims to bring an icon to become a gesture of affection for new audiences too, without losing its hidden heart.',
+        description: 'For Rossana - the hard candy with a soft heart that generations of Italians have enjoyed - the future is born from a conscious return to its roots: this rebranding aims to echo the iconic shape, in a gesture of affection for new audiences, without losing its original hidden heart.',
         slides: [
           { image: '/opt/P-Rossana/Packaging.webp'},
           {image: '/opt/P-Rossana/Scatole.webp', layout: 'full-image'},
-          {image: '/opt/P-Rossana/loghi.webp', layout:'image-text', description: 'The rebranding conceived for Rossana is born with the goal of modernising its identity without losing the bond with its heritage. The new visual identity system stems from the desire to strengthen brand recognition, make it more appealing to new generations, and communicate the candy not merely as a product, but as a gesture of affection and a tradition to be shared.\n\nThe project is grounded in a reinterpretation of the historic logo, keeping its neo-gothic soul intact. The distinctive element is the stylised silhouette of the candy, integrated between the two \"s\"s of the logotype: a subtle yet memorable detail that becomes the brand\'s defining symbol. A new palette enriches the iconic red with options for new flavours that speak to the creaminess of the Rossana heart. New paper packaging shifts the tactile experience in store, welcoming a new generation of consumers.'},
+          {image: '/opt/P-Rossana/loghi.webp', layout:'image-text', description: 'The rebranding conceived for Rossana is born with the goal of modernising its identity without losing the bond with its heritage. The new visual identity system stems from the desire to strengthen brand recognition, make it more appealing to new generations, and communicate the candy not merely as a product, but as a small ritual of trust passed between generations.\n\nThe project is grounded in a reinterpretation of the historic logo, keeping its neo-gothic soul intact. The distinctive element is the stylised silhouette of the candy, integrated between the two \"s\"s of the logotype: a subtle yet memorable detail that becomes the brand\'s defining symbol. A new palette enriches the iconic red with options for new flavours that speak to the creaminess of the Rossana heart. New paper packaging shifts the tactile experience in store, welcoming a new generation of consumers.'},
           {image: '/opt/P-Rossana/100anni.webp', layout: 'full-image'},
           {image: '/opt/P-Rossana/b3.webp', layout:'image-text', description: 'The campaign builds on a memory shared by almost every Italian: a loved one, usually a grandparent, passing a Rossana into your hand after your visit.\nThis gesture is key to expand the meaning of gifting a Rossana as a gesture of love. This in combination with season limited flavors expands the brand\'s seasonal presence. The campaign encourages this intimate gesture by launching the limited flavours around key festivities, such as Grandparents\' Day.'},
           {images:['/opt/P-Rossana/img1.webp', '/opt/P-Rossana/b1.webp'], layout:'two-images'},
@@ -143,7 +143,7 @@ export const projectRows: ProjectRowData[] = [
         client: 'Civiltà dei Dati, Fondazione Leonardo',
         description: 'For the June 2026 issue of Civiltà dei Dati, focused on the perils of perception, the infographic centres on two data points that expose the gap between what people believe and what is real: the concentration of wealth held by the top 1%, and the perceived versus actual share of immigrant population by country. \n\n The visual language draws from early radiography, as if the world itself were being held up to the light, each country examined like an organ, its issues laid bare beneath the surface. The map is rendered on a tilted sphere, the world captured as an imperfect, living body mid-scan, rather than a flat analytical projection.',
         coverImage: '/opt/P-CDD/copertina.webp',
-        links:[{label: 'Civiltà dei Dati', url:'https://www.fondazioneleonardo.com/civilta-dei-dati'},],
+        links:[{label: 'Visit Civiltà dei Dati', url:'https://www.fondazioneleonardo.com/civilta-dei-dati'},],
         slides: [
           {image: '/opt/P-CDD/CDD2Mockup.webp'},
 
@@ -154,9 +154,9 @@ export const projectRows: ProjectRowData[] = [
         title: 'On the Brink',
         year: 2026,
         tags: ['Motion design', 'Visual identity'],
-        role: 'Storyboarding, motion designer, visual identity design',
+        role: 'Digital design subteam leader, storyboarder, motion designer, visual identity design',
         client: 'TEDxSapienzaU',
-        links:[{label: 'TEDxSapienzaU', url:'https://www.tedxsapienzau.com/'},],
+        links:[{label: 'Visit TEDxSapienzaU', url:'https://www.tedxsapienzau.com/'},],
         flex: 2,
         coverImage: '/opt/P-Brink/Copertina.webm',
         description: 'The intro video for TEDxSapienzaU - On the Brink was crafted to tell the story of the identity itself. A square, symbol of stability. Then the breaking point: the liminal, suspended "on the brink" moment, dense with possible futures. Then an explosion of repetitions in vibrant colours, each one representing a different possible scenario. Designed to pull the audience into the theme before the first speech begins, both in the theatre and on YouTube.',
@@ -175,10 +175,10 @@ export const projectRows: ProjectRowData[] = [
         id: 'p7',
         title: 'Para Doxa',
         year: 2025,
-        tags: ['Visual identity', 'Social media'],
+        tags: ['Visual identity'],
         client: 'TEDxSapienzaU',
-        role: 'Digital design subteam leader, concept creator, digital designer',
-        links:[{label: 'TEDxSapienzaU', url:'https://www.tedxsapienzau.com/'},],
+        role: 'Digital design subteam leader, concept creator, visual identity design, digital designer, motion designer',
+        links:[{label: 'Visit TEDxSapienzaU', url:'https://youtu.be/oel9-7Az0vw?si=QZ4kH5ZyQriEDloU'},],
         flex: 3,
         description: 'As digital design lead for TEDxSapienzaU\'s April 2025 edition, Para Doxa, I was responsible for all screen graphics on the day of the event and all digital media beforehand, spanning social media, newsletters, and animations. The visual identity was born with the goal of building a visual language immediately recognizable as belonging to the world of paradoxes, speaking directly to the event\'s primary audience of university students. After the event, I also oversaw the storyboarding and production of the intro animations for the talk recordings published on the official TEDx channel.',
         coverImage: '/opt/P-Paradoxa/almaroli.webp',
@@ -196,13 +196,13 @@ export const projectRows: ProjectRowData[] = [
         id: 'p8',
         title: 'AperiPrinting',
         year: 2026,
-        tags: ['Illustration','Event organization'],
+        tags: ['Illustration','Brand activation'],
         flex: 1,
         client: 'TEDxSapienzaU',
         links:[{label: 'TEDxSapienzaU', url:'https://www.tedxsapienzau.com/'},],
         role: 'Event concept, organization, illustration',
         coverImage: '/opt/P-Aperiprinting/DSCF0351.webp',
-        description: 'AperiPrinting was an event designed to let TEDxSapienzaU\'s community, followers and volunteers alike, create their own dream merch, in a fun, accessible and lighthearted way. Organizing it meant making decisions from large scale experience design to small scale like printing method, and designing matrixes that would engage peoples creativity. We landed on 3D-printed stamps: accessible both in cost and ease of use. \n\nBeyond the association\'s logos, the team designed four illustration sets, each representing a different theme, which participants could freely combine into their own composition. The set I designed captures the rhythmic, chaotic dance of event setup, something anyone who has ever volunteered for an organization like this knows deep in their bones.',
+        description: 'AperiPrinting was an event designed to let TEDxSapienzaU\'s community, followers and volunteers alike, create their own dream merch, in a fun, accessible and lighthearted way. Organizing it meant making decisions ranging from large-scale experience design down to the printing method: 3D-printed stamps, chosen for their accessibility in cost and ease of use. \n\nBeyond the association\'s logos, the team designed four illustration sets, each representing a different theme, which participants could freely combine into their own composition. The set I designed captures the rhythmic, chaotic dance of event setup, something anyone who has ever volunteered for an organization like this knows deep in their bones.',
         slides: [
           {video: '/opt/P-Aperiprinting/VideoCopertina2.webm'},
           {image: '/opt/P-Aperiprinting/DSCF0302.webp', layout: 'full-image'},

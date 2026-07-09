@@ -10,7 +10,7 @@ const { id, class: className, gridClass, padClass = 'px-2', colsClass = 'grid-co
 ---
 
 <section class:list={['slide', className]} id={id}>
-  <div class:list={['grid gap-2 h-full w-full', colsClass, padClass, gridClass]}>
+  <div class:list={['slide-inner grid gap-2 h-full w-full', colsClass, padClass, gridClass]}>
     <slot />
   </div>
 </section>

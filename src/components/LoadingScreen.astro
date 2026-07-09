@@ -1,0 +1,190 @@
+---
+import { execSync } from 'child_process';
+const gitVersion = execSync('git log -1 --format=%s').toString().trim();
+---
+
+<div id="ls-overlay" style="position:fixed;inset:0;z-index:9999;background:var(--seccolor);pointer-events:all;">
+  <div id="ls-rows" style="position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;"></div>
+</div>
+
+<style is:global>
+  [data-typewriter] { opacity: 0; }
+  [data-fade-in]    { opacity: 0; transition: opacity 0.8s ease; }
+</style>
+
+<script is:inline define:vars={{ gitVersion }}>
+  // ── LABEL CONFIG ──────────────────────────────────────────────────────
+  const LABEL_TEXT      = 'Nicholas-Barbieri-Portfolio';  // text to inject
+  const LABEL_ROW_SPAN  = 8;   // how many central rows the label can appear in (every other one)
+
+  // ── LOADING CONFIG ────────────────────────────────────────────────────
+  const ROW_COUNT_LIMIT     = 8;    // max rows to show (0 = fill the screen)
+  const CHAR_SPEED_MS       = 35;
+  const MAX_ROW_DELAY_MS    = 1200;
+  const FONT_SIZE_VW        = 2.5;
+  const FONT_WEIGHT         = 200;
+  const FONT_ROND           = 100;
+  const OVERLAY_EXIT_MS     = 120;
+  const TYPEWRITER_SPEED_MS = 60;
+  const TYPEWRITER_STAGGER  = 60;
+  const FADE_STAGGER_MS     = 60;
+
+  // ── PAUSE CONFIG ──────────────────────────────────────────────────────
+  const PAUSE_CHANCE  = 0.06;   // probability of pausing at each character step
+  const PAUSE_MIN_MS  = 330;     // shortest random pause (ms)
+  const PAUSE_MAX_MS  = 500;    // longest random pause (ms)
+
+  // ── SETUP ─────────────────────────────────────────────────────────────
+  const overlay   = document.getElementById('ls-overlay');
+  const container = document.getElementById('ls-rows');
+
+  const _cs      = getComputedStyle(document.documentElement);
+  const keyColor = _cs.getPropertyValue('--keycolor').trim();
+
+  const W             = window.innerWidth;
+  const H             = window.innerHeight;
+  const fontSize      = W * (FONT_SIZE_VW / 100);
+  const fullRowCount  = Math.ceil(H / fontSize) + 1;
+  const rowCount      = ROW_COUNT_LIMIT > 0 ? Math.min(ROW_COUNT_LIMIT, fullRowCount) : fullRowCount;
+  const charsPerRow   = Math.ceil(W / (fontSize * 0.55)) + 10;
+
+  // ── SELECT LABEL ROWS ─────────────────────────────────────────────────
+  const fullLabel = LABEL_TEXT + '-' + gitVersion;
+
+  // Every other row within the central LABEL_ROW_SPAN rows
+  const midRow     = Math.floor(rowCount / 2);
+  const spanHalf   = Math.floor(LABEL_ROW_SPAN / 2);
+  const candidates = [];
+  for (let i = midRow - spanHalf; i < midRow + spanHalf; i++) {
+    if ((i - (midRow - spanHalf)) % 2 === 0 && i >= 0 && i < rowCount) candidates.push(i);
+  }
+  const labelRowSet = new Set(candidates);
+
+  // ── BUILD ROWS ────────────────────────────────────────────────────────
+  const rowEls = [];
+  for (let i = 0; i < rowCount; i++) {
+    const div = document.createElement('div');
+    div.style.cssText = [
+      `font-family: 'Doto', sans-serif`,
+      `font-variation-settings: "ROND" ${FONT_ROND}`,
+      `font-weight: ${FONT_WEIGHT}`,
+      `font-size: ${fontSize}px`,
+      `line-height: 1`,
+      `height: ${fontSize}px`,
+      `color: ${keyColor}`,
+      `white-space: nowrap`,
+      `overflow: hidden`,
+      `display: flex`,
+      `align-items: center`,
+    ].join(';');
+    container.appendChild(div);
+    rowEls.push(div);
+  }
+
+  // ── BUILD TARGETS ─────────────────────────────────────────────────────
+  const dashes = '-'.repeat(charsPerRow);
+
+  // Start can be negative so the label appears cut off on the left edge
+  const minStart         = -Math.floor(fullLabel.length * 0.6);
+  const maxStart         = charsPerRow - 5;
+  const MIN_ADJACENT_GAP = Math.floor(charsPerRow * 0.4);
+
+  // Assign positions in row-index order so adjacent label rows are spread apart
+  const sortedCandidates = [...candidates].sort((a, b) => a - b);
+  const labelPositions   = new Map();
+  let prevRowIdx = -999;
+  let prevPos    = minStart - 1;
+
+  sortedCandidates.forEach(rowIdx => {
+    let pos;
+    const isClose = rowIdx - prevRowIdx <= 2;
+    let tries = 0;
+    do {
+      pos = Math.floor(Math.random() * (maxStart - minStart + 1)) + minStart;
+      tries++;
+    } while (isClose && Math.abs(pos - prevPos) < MIN_ADJACENT_GAP && tries < 30);
+    labelPositions.set(rowIdx, pos);
+    prevRowIdx = rowIdx;
+    prevPos    = pos;
+  });
+
+  const targets = rowEls.map((_, i) => {
+    if (!labelRowSet.has(i)) return dashes;
+    const start          = labelPositions.get(i);
+    const effectiveStart = Math.max(0, start);
+    // If start is negative, skip the hidden left portion of the label
+    const labelSlice     = start < 0 ? fullLabel.slice(-start) : fullLabel;
+    const afterLen       = charsPerRow - effectiveStart - labelSlice.length;
+    const after          = afterLen > 0 ? '-'.repeat(afterLen) : '';
+    return dashes.slice(0, effectiveStart) + labelSlice + after;
+  });
+
+  // ── ANIMATE ROWS ──────────────────────────────────────────────────────
+  let completedRows = 0;
+
+  rowEls.forEach((row, i) => {
+    const target = targets[i];
+    const delay  = Math.random() * MAX_ROW_DELAY_MS;
+    let c = 0;
+
+    function step() {
+      row.textContent = target.slice(0, ++c);
+      if (c >= target.length) {
+        if (++completedRows === rowEls.length) exitPhase();
+        return;
+      }
+      const wait = Math.random() < PAUSE_CHANCE
+        ? PAUSE_MIN_MS + Math.random() * (PAUSE_MAX_MS - PAUSE_MIN_MS)
+        : CHAR_SPEED_MS;
+      setTimeout(step, wait);
+    }
+
+    setTimeout(step, delay);
+  });
+
+  // ── PHASE 2: FADE OUT ────────────────────────────────────────────────
+  const HOLD_MS      = 0;   // ms to hold the finished screen before fading
+  const ROWS_FADE_MS = 300;
+
+  function exitPhase() {
+    setTimeout(() => {
+      container.style.transition = `opacity ${ROWS_FADE_MS}ms ease`;
+      container.style.opacity    = '0';
+      setTimeout(fadeOverlay, ROWS_FADE_MS);
+    }, HOLD_MS);
+  }
+
+  function fadeOverlay() {
+    overlay.style.transition = `opacity ${OVERLAY_EXIT_MS}ms ease`;
+    overlay.style.opacity    = '0';
+    setTimeout(() => {
+      overlay.remove();
+      reveal();
+      document.dispatchEvent(new Event('loading-complete'));
+    }, OVERLAY_EXIT_MS);
+  }
+
+  // ── PHASE 3: REVEAL ───────────────────────────────────────────────────
+  function reveal() {
+    document.querySelectorAll('[data-typewriter]').forEach((el, i) => {
+      const savedHTML = el.innerHTML;
+      const text      = el.dataset.typewriterText ?? el.textContent ?? '';
+      el.textContent  = '';
+      el.style.opacity = '1';
+      let c = 0;
+      setTimeout(() => {
+        const iv = setInterval(() => {
+          el.textContent = text.slice(0, ++c);
+          if (c >= text.length) {
+            clearInterval(iv);
+            if (el.dataset.typewriterText) el.innerHTML = savedHTML;
+          }
+        }, TYPEWRITER_SPEED_MS);
+      }, i * TYPEWRITER_STAGGER);
+    });
+
+    document.querySelectorAll('[data-fade-in]').forEach((el, i) => {
+      setTimeout(() => { el.style.opacity = '1'; }, i * FADE_STAGGER_MS);
+    });
+  }
+</script>

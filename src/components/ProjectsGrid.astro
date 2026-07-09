@@ -8,15 +8,67 @@ function isVideo(src: string) {
 ---
 
 <style>
-  .card-overlay {
-    background-color: transparent;
-    transition: background-color 0.3s ease;
+  /* ── Card isolation & fallback background (shows through on image fade) ── */
+  .project-card { isolation: isolate; background-color: var(--seccolor); }
+
+  /* ── Image zoom & fade ────────────────────────────────── */
+  .card-media {
+    transform-origin: center;
+    will-change: transform;
+    transition: scale 0.4s ease, opacity 0.4s ease;
   }
-  .project-card:hover .card-overlay,
-  .project-card.is-open .card-overlay {
-    background-color: color-mix(in srgb, var(--keycolor) 60%, transparent);
+  .project-card:hover .card-media,
+  .project-card.is-open .card-media {
+    scale: 1.08;
+    opacity: 0.30; /* ← fades to reveal --seccolor behind the image */
   }
+
+  /* ── Dash dividers ───────────────────────────────────── */
+  .card-divider {
+    position: absolute;
+    top: 1rem;   /* just below year/tags row (text-xs ≈ 0.75rem) */
+    bottom: 1em; /* 1em = h4 font-size, keeps divider above title top edge */
+    font-size: clamp(0.25rem, 2.5vw, 2.75rem); /* so 1em above matches h4 scale */
+    pointer-events: none;
+    color: var(--keycolor);
+    font-family: var(--font-display);
+    font-variation-settings: "ROND" 100;
+    font-weight: 200;
+    line-height: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    display: block;
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.2s ease; /* exit */
+    /* Wave gap — CSS custom props animated by JS; defaults hide the gap */
+    --ms: 200%; --me: 200%;
+    mask-image: linear-gradient(
+      to bottom,
+      black 0%, black var(--ms),
+      transparent var(--ms), transparent var(--me),
+      black var(--me), black 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      black 0%, black var(--ms),
+      transparent var(--ms), transparent var(--me),
+      black var(--me), black 100%
+    );
+  }
+  .card-divider-left  { left:  0; }
+  .card-divider-right { right: 0; }
+
+  /* enter: typewriter top-to-bottom */
+  .project-card:hover .card-divider,
+  .project-card.is-open .card-divider {
+    clip-path: inset(0 0 0% 0);
+    transition: clip-path 0.6s steps(10, end);
+  }
+
+  /* card text stays visible when panel is open */
   .project-card.is-open .card-text { opacity: 1; }
+
 </style>
 
 <div class="projects-grid flex flex-col">
@@ -33,25 +85,27 @@ function isVideo(src: string) {
             style={`flex: ${project.flex};`}
             data-project-id={project.id}
           >
-            {/* Immagine o video copertina, o placeholder */}
-            <div class="absolute inset-0 overflow-hidden">
+            {/* Immagine o video copertina */}
+            <div class="absolute inset-0 overflow-hidden" data-fade-in>
               {project.coverImage
                 ? isVideo(project.coverImage)
                   ? <video
                       src={project.coverImage}
-                      class="w-full h-full object-cover block"
-                      autoplay
-                      loop
-                      muted
-                      playsinline
+                      class="card-media w-full h-full object-cover block"
+                      autoplay loop muted playsinline
                     />
-                  : <img src={project.coverImage} alt={project.title} class="w-full h-full object-cover block" />
+                  : <img
+                      src={project.coverImage}
+                      alt={project.title}
+                      class="card-media w-full h-full object-cover block"
+                    />
                 : <div class="w-full h-full bg-neutral-200"></div>
               }
             </div>
 
-            {/* Rettangolo keycolor — rimane visibile con .is-open */}
-            <div class="card-overlay absolute inset-0 pointer-events-none"></div>
+            {/* Dash dividers — content filled and centered by JS */}
+            <div class="card-divider card-divider-left"  aria-hidden="true"></div>
+            <div class="card-divider card-divider-right" aria-hidden="true"></div>
 
             {/* Anno e tag — ancorati in alto */}
             <div class="
@@ -61,22 +115,22 @@ function isVideo(src: string) {
               opacity-0 group-hover:opacity-100
               transition-opacity duration-300
               pointer-events-none
-              text-(--seccolor)
+              text-(--keycolor)
             ">
-              <span class="text-xs font-light tracking-widest leading-none">
+              <span>
                 {project.year}
               </span>
               <div class="flex flex-wrap justify-end">
-                <span class="text-xs tracking-wide leading-none">{project.tags.join(', ')}</span>
+                <span>{project.tags.join(', ')}</span>
               </div>
             </div>
 
-            {/* Titolo — ancorato al fondo della card, offset in em = scala col font-size */}
+            {/* Titolo — ancorato al fondo della card */}
             <h4
               class="
                 card-text
                 absolute left-0 right-0
-                text-(--seccolor) leading-tight
+                text-(--keycolor) leading-tight
                 opacity-0 group-hover:opacity-100
                 transition-opacity duration-300
                 pointer-events-none
@@ -96,6 +150,120 @@ function isVideo(src: string) {
 </div>
 
 <script>
+  // ── Constants ─────────────────────────────────────────
+  const WAVE_SIZE  = 3;
+  const WAVE_SPEED = 60;   // ms per step
+  const WAVE_PAUSE = 30;   // idle ticks between waves (~1.8 s)
+
+  // ── Calibrate dividers ────────────────────────────────
+  // scrollHeight === clientHeight for overflow:hidden elements in Chrome, so we
+  // cannot use it to measure content. Instead we create an off-screen probe with
+  // overflow:visible and no fixed height, render N dashes there, and read the
+  // real physical height via getBoundingClientRect().
+  function calibrateDividers() {
+    const ref = document.querySelector<HTMLElement>('.card-divider');
+    if (!ref) return;
+
+    const fontSize = getComputedStyle(ref).fontSize;
+
+    const probe = document.createElement('div');
+    probe.style.cssText =
+      'position:fixed;top:-9999px;left:-9999px;' +
+      'visibility:hidden;pointer-events:none;overflow:visible;' +
+      `writing-mode:vertical-rl;font-size:${fontSize};` +
+      'font-family:"Doto",sans-serif;font-weight:200;' +
+      'line-height:1;white-space:nowrap;padding:0;margin:0;border:none;';
+    probe.style.setProperty('font-variation-settings', '"ROND" 100');
+    const N = 20;
+    probe.textContent = '-'.repeat(N);
+    document.body.appendChild(probe);
+    const charAdvance = probe.getBoundingClientRect().height / N;
+    document.body.removeChild(probe);
+
+    if (!charAdvance) return;
+
+    const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+    document.querySelectorAll<HTMLElement>('.card-divider').forEach((div) => {
+      div.style.paddingTop = '0px';
+
+      const card = div.closest<HTMLElement>('.project-card');
+      if (!card) return;
+      const cardHeight = card.clientHeight;
+
+      // Use 1rem margin symmetrically so centering is card-relative, not
+      // divider-relative (bottom:1em != top:1rem at larger viewport widths).
+      // Subtract 2 to add one extra char of clearance on each side, keeping
+      // the dash column clear of the title at the bottom.
+      const count      = Math.floor((cardHeight - 2 * remPx) / charAdvance) - 2;
+      if (count <= 0) return;
+      const dashHeight = count * charAdvance;
+
+      // Set top/bottom to equal pixel values so the element spans exactly the
+      // dash block, centered. The wave animation uses % of element height so it
+      // works correctly only when no padding is added (element = content).
+      const offset = (cardHeight - dashHeight) / 2;
+      div.style.top    = `${offset}px`;
+      div.style.bottom = `${offset}px`;
+
+      div.textContent = '-'.repeat(count);
+      div.dataset.dashCount = String(count);
+    });
+  }
+
+  // rAF lets layout settle; fonts.ready re-runs once Doto is loaded (metrics differ from fallback)
+  requestAnimationFrame(calibrateDividers);
+  document.fonts.ready.then(calibrateDividers);
+  window.addEventListener('resize', calibrateDividers);
+
+  // ── Dash wave animation ────────────────────────────────
+  const activeWaves = new Map<string, number>();
+
+  function startDashWave(card: HTMLElement) {
+    const id = card.dataset.projectId!;
+    if (activeWaves.has(id)) return;
+
+    const divs  = card.querySelectorAll<HTMLElement>('.card-divider');
+    const count = parseInt(divs[0]?.dataset.dashCount ?? '10', 10);
+    if (!count) return;
+
+    // Each character occupies (100/count)% of the element's physical height.
+    // We animate a transparent band through the mask-image gradient instead of
+    // changing textContent — this avoids the height-change glitch that occurs
+    // when spaces have a different advance width than dashes in the Doto font.
+    const step = 100 / count;
+    let pos = -WAVE_SIZE;
+
+    const interval = window.setInterval(() => {
+      pos++;
+      if (pos > count + WAVE_PAUSE) pos = -WAVE_SIZE;
+
+      const ms = `${pos * step}%`;
+      const me = `${(pos + WAVE_SIZE) * step}%`;
+      divs.forEach((d) => {
+        d.style.setProperty('--ms', ms);
+        d.style.setProperty('--me', me);
+      });
+    }, WAVE_SPEED);
+
+    activeWaves.set(id, interval);
+  }
+
+  function stopDashWave(card: HTMLElement) {
+    const id = card.dataset.projectId!;
+    const interval = activeWaves.get(id);
+    if (interval !== undefined) {
+      clearInterval(interval);
+      activeWaves.delete(id);
+    }
+    // Reset the mask gap to an off-screen position (no visible gap)
+    card.querySelectorAll<HTMLElement>('.card-divider').forEach((d) => {
+      d.style.setProperty('--ms', '200%');
+      d.style.setProperty('--me', '200%');
+    });
+  }
+
+  // ── Panel open / close ─────────────────────────────────
   const grid = document.querySelector('.projects-grid') as HTMLElement;
 
   function getPanel(projectId: string): HTMLElement | null {
@@ -108,15 +276,17 @@ function isVideo(src: string) {
 
   function openPanel(panel: HTMLElement) {
     panel.style.maxHeight = panel.scrollHeight + 'px';
-    getCard(panel.dataset.for!)?.classList.add('is-open');
+    const card = getCard(panel.dataset.for!);
+    card?.classList.add('is-open');
+    if (card) startDashWave(card);
   }
 
   function closePanel(panel: HTMLElement, cb?: () => void) {
     panel.style.maxHeight = '0';
-    getCard(panel.dataset.for!)?.classList.remove('is-open');
-    if (cb) {
-      panel.addEventListener('transitionend', cb, { once: true });
-    }
+    const card = getCard(panel.dataset.for!);
+    card?.classList.remove('is-open');
+    if (card) stopDashWave(card);
+    if (cb) panel.addEventListener('transitionend', cb, { once: true });
   }
 
   grid.addEventListener('click', (e) => {
@@ -134,7 +304,6 @@ function isVideo(src: string) {
       return;
     }
 
-    // Chiude gli altri pannelli aperti, poi apre quello cliccato
     const alreadyOpen = ([...grid.querySelectorAll('.project-detail')] as HTMLElement[]).filter(
       (p) => p.style.maxHeight !== '0px' && p.style.maxHeight !== ''
     );

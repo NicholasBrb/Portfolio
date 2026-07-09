@@ -3,11 +3,15 @@
 
 /* ─── Design Tokens ──────────────────────────────────────────── */
 :root {
-  --seccolor: #F5F2EE;
-  --keycolor: #0023F5;
+  --seccolor: #E6DFD5; /*#F5F2EE*/
+  --keycolor: #332D2A; /*#0023F5*/
 
   --font-display: "Doto", sans-serif;
   --font-body: "Inter", sans-serif;
+
+  --small-weight: 250;
+  /* mix-blend-difference on <nav> optically thickens text edges; subtract to compensate */
+  --nav-optical-offset: -50;
 }
 
 @layer components {
@@ -17,8 +21,8 @@
   .divider-h,
   .divider-v {
     font-family: var(--font-display);
-    font-variation-settings: "ROND" 100;
-    font-weight: 200;
+    font-variation-settings: "ROND" 80;
+    font-weight: 100; /*200*/
     font-size: clamp(0.25rem, 2.5vw, 2.75rem); /* ← adjust to control dot size */
     line-height: 1;
     overflow: hidden;
@@ -30,11 +34,40 @@
     writing-mode: vertical-rl;
   }
 
+  /* ─── Scroll invite: typewriter dash/slash ticker ──────────────── */
+  .scroll-invite {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+
+  .scroll-invite__line {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .scroll-invite__track {
+    display: inline-block;
+    animation: scroll-invite-flow 2.4s steps(12) infinite;
+  }
+
+  @keyframes scroll-invite-flow {
+    from { transform: translateX(-12ch); }
+    to   { transform: translateX(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-invite__track {
+      animation: none;
+    }
+  }
+
   .btn--h4 {
     font-family: "Doto", sans-serif;
-    font-variation-settings: "ROND" 99;
+    font-variation-settings: "ROND" 80;
     font-size: clamp(6.25rem, 2.5vw, 8.75rem);
-    font-weight: 200;
+    font-weight: 100;
     line-height: 0.6;
     letter-spacing: -0.04em;
     transition: font-weight 0.2s ease;
@@ -45,6 +78,8 @@
   }
 
   .btn--small {
+    font-weight: calc(var(--small-weight) + var(--nav-optical-offset));
+    letter-spacing: 0.02em;
     line-height: 1.0;
     transition: font-weight 0.2s ease;
   }
@@ -85,6 +120,8 @@
   text-decoration-thickness: 1px;
 }
 
+.print-title-overlay { display: none; }
+
 
 
 /* ─── Base Layer ─────────────────────────────────────────────── */
@@ -95,7 +132,7 @@
     font-family: var(--font-body);
     font-optical-sizing: auto;
     font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-    font-weight: 200;
+    font-weight: 250;
   }
 
   /* --- Doto: Display scale --- */
@@ -104,7 +141,7 @@
     font-family: var(--font-display);
     font-optical-sizing: auto;
     font-style: normal;
-    font-variation-settings: "ROND" 100;
+    font-variation-settings: "ROND" 80;
     font-size: clamp(1.5rem, 6vw, 4rem);   /* ~40px → 80px */
     font-weight: 600;                        /* bold display — modifica qui */
     line-height: 1.05;
@@ -115,10 +152,10 @@
     font-family: var(--font-display);
     font-optical-sizing: auto;
     font-style: normal;
-    font-variation-settings: "ROND" 100;
-    font-size: clamp(0.25rem, 2.5vw, 2.75rem); /* ~20px → 28px */
+    font-variation-settings: "ROND" 80;
+    font-size: clamp(1.25rem, 2.5vw, 2.75rem); /* ~20px → 28px */
     font-weight: 800;                            /* leggero — modifica qui */
-    line-height: 1.25;
+    line-height: 1;
     letter-spacing: 0.01em;
   }
 
@@ -139,9 +176,14 @@
     font-optical-sizing: auto;
     font-style: normal;
     font-size: clamp(0.55rem, 1vw, 0.675rem); /* ~12px → 14px */
-    font-weight: 100;
+    font-weight: var(--small-weight);
     line-height: 1.5;
     letter-spacing: 0.02em;
+  }
+
+  /* nav sits under mix-blend-difference — compensate the optical thickening */
+  nav small {
+    font-weight: calc(var(--small-weight) + var(--nav-optical-offset));
   }
 
   footer {
@@ -151,6 +193,99 @@
 
  }
 
+
+/* ─── Tablet / narrow desktop (768px–1099px) ────────────────────
+   A half-width PC window lands here: still the multi-column desktop
+   grid, but the fixed 16:9 slide box shrinks faster than its text
+   content does, so slides clip/overlap instead of just looking
+   cramped. Let these slides' height follow content instead of the
+   aspect ratio; grid columns stay untouched. Screen-only — @media
+   print below still forces the rigid 16:9 page for the PDF export.
+
+   Scoped to #who/#experience/#contacts only (not .slide generally):
+   their content is plain in-flow text. Every other slide (hero, and
+   all ProjectDetail media layouts) fills its box via h-full/absolute
+   inset-0 on images/video — those percentages need a definite parent
+   height, so dropping aspect-ratio there collapses them to 0 height
+   and their content escapes the box instead of scaling down. */
+@media (min-width: 768px) and (max-width: 1099px) {
+  #who.slide,
+  #experience.slide,
+  #contacts.slide {
+    aspect-ratio: unset;
+    height: auto;
+    min-height: 40vw;
+  }
+}
+
+/* ─── Mobile (< 768px) ───────────────────────────────────────── */
+@media (max-width: 767px) {
+
+  /* Full width — remove navbar column space */
+  .main-canvas {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  /* Navbar title: scale to fit on one line within 85% of screen */
+  .btn--h4 {
+    font-size: 8vw;
+  }
+
+  /* Projects grid: single column of 16:9 cards */
+  .projects-row {
+    flex-direction: column;
+    height: auto !important;
+  }
+  .project-card {
+    flex: none !important;
+    width: 100%;
+    height: 56.25vw;
+  }
+
+  /* All slides: drop 16:9 constraint */
+  .slide {
+    aspect-ratio: unset;
+    height: auto;
+  }
+  /* Hero keeps a fixed height so h-full on the inner grid resolves correctly,
+     allowing justify-end to push the tagline to the bottom */
+  #hero.slide {
+    height: 56vw;
+  }
+
+  /* Slide.astro inner grid → single column */
+  .slide-inner {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ProjectDetail slide layouts: stack image above text */
+  .slide-content {
+    display: flex !important;
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+  }
+  .slide-media {
+    width: 100% !important;
+    flex: none !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9;
+  }
+  .slide-text {
+    width: 100% !important;
+    flex: none !important;
+    position: relative !important;
+    height: auto !important;
+    min-height: 3rem;
+    padding: 0.75rem 0.5rem;
+  }
+  /* Un-anchor absolutely-positioned text sub-blocks so they flow normally */
+  .slide-text .absolute {
+    position: relative !important;
+    inset: auto !important;
+  }
+}
 
 /* ─── Print: 16:9 slides ─────────────────────────────────────── */
 @media print {
@@ -191,10 +326,29 @@
     page-break-after: always;
     break-after: page;
     overflow: hidden;
+    position: relative;
   }
 
   .slide:last-child {
     page-break-after: avoid;
     break-after: avoid;
+  }
+
+  .projects-row { display: none; }
+
+  .project-detail {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .print-title-overlay {
+    display: block;
+    position: absolute;
+    bottom: -0.3em;
+    left: 0.5rem;
+    right: 25%;
+    mix-blend-mode: difference;
+    color: var(--seccolor);
+    pointer-events: none;
   }
 }

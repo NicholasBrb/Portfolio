@@ -15,36 +15,53 @@ const NavLinks = [
     },
     
     {
-        name : 'Who am i?',
+        name : 'Who am I?',
         url: '#who',
         style: 'small',
     },
     {
-        name : 'Contact me',
-        url: 'mailto:nick_flick@outlook.com',
+        name : 'Contacts',
+        url: '#contacts',
         style: 'small',
     }
 ]
 ---
 
-<nav class="fixed top-0 left-0 h-screen z-50 mix-blend-difference pointer-events-none flex flex-col justify-between" style="color: #F5CF00;">
-    <div class="p-8 pt-1">
+<nav id="main-nav" class="fixed top-0 left-0 z-50 md:h-screen mix-blend-difference pointer-events-none flex flex-col md:justify-between" style="color: var(--blend-color)">
+    <div class="pl-2 pt-1 md:pl-8 md:pr-8 md:pb-8">
         <ul class="nav-links pointer-events-none" role="navigation">
             {NavLinks.map(link => (
-                <li role="none">
-                    <a href={link.url} class={`btn btn--${link.style} pointer-events-auto`} nav-link>{link.name}</a>
+                <li role="none" class:list={[link.style === 'small' && 'hidden md:block']}>
+                    <a href={link.url} class={`btn btn--${link.style} pointer-events-auto`} nav-link data-typewriter>{link.name}</a>
                 </li>
             ))}
         </ul>
     </div>
-    <div class="pl-8">
+    <div class="pl-8 hidden md:block">
         <slot name="nav-bottom">
-            <small>Copyright © 2026 Nicholas Barbieri - <a href="mailto:nick_flick@outlook.com">nick_flick@outlook.com</a> - {version}</small>
+            <small
+              data-typewriter
+              data-typewriter-text={`Copyright © 2026 Nicholas Barbieri - nick_flick@outlook.com - ${version}`}
+            >Copyright © 2026 Nicholas Barbieri - <a href="mailto:nick_flick@outlook.com" class="link-ext pointer-events-auto">nick_flick@outlook.com</a> - {version}</small>
         </slot>
     </div>
 </nav>
 
 <script>
+  // Compute nav blend color: sec − key per channel so mix-blend-difference renders as keycolor over seccolor
+  (function () {
+    const cs  = getComputedStyle(document.documentElement);
+    const hex = (v: string) => v.trim().replace('#', '');
+    const toRgb = (h: string) => [0,2,4].map(i => parseInt(h.slice(i,i+2), 16));
+    const toHex = (ch: number[]) => '#' + ch.map(v => Math.max(0,Math.min(255,v)).toString(16).padStart(2,'0')).join('');
+
+    const sec = toRgb(hex(cs.getPropertyValue('--seccolor')));
+    const key = toRgb(hex(cs.getPropertyValue('--keycolor')));
+    const nav = toHex(sec.map((v, i) => v - key[i]));
+
+    document.documentElement.style.setProperty('--blend-color', nav);
+  })();
+
   const links = document.querySelectorAll<HTMLAnchorElement>('[nav-link]');
 
   const observer = new IntersectionObserver(
