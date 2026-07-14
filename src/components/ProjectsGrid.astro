@@ -274,6 +274,40 @@ function isVideo(src: string) {
     return grid.querySelector(`.project-card[data-project-id="${projectId}"]`);
   }
 
+  // ── Mobile panel repositioning ──────────────────────────
+  // Desktop keeps each row's panels grouped after the whole row (a panel
+  // spans the full row width, so it doesn't matter which card in the row
+  // was clicked). On mobile the row collapses to a single column, so a
+  // panel grouped after the *row* ends up below the row's last card
+  // instead of the clicked one. We mark each panel's authored position
+  // with a comment anchor, then move it right after its own card on
+  // mobile and back to the anchor on desktop.
+  const mobileQuery = window.matchMedia('(max-width: 767px)');
+  const panelAnchors = new Map<HTMLElement, Comment>();
+
+  grid.querySelectorAll<HTMLElement>('.project-detail').forEach((panel) => {
+    const anchor = document.createComment('panel-anchor');
+    panel.after(anchor);
+    panelAnchors.set(panel, anchor);
+  });
+
+  function layoutPanels() {
+    const mobile = mobileQuery.matches;
+    grid.querySelectorAll<HTMLElement>('.project-card').forEach((card) => {
+      const panel = getPanel(card.dataset.projectId!);
+      if (!panel) return;
+      if (mobile) {
+        if (card.nextElementSibling !== panel) card.after(panel);
+      } else {
+        const anchor = panelAnchors.get(panel);
+        if (anchor && panel.nextSibling !== anchor) anchor.before(panel);
+      }
+    });
+  }
+
+  layoutPanels();
+  window.addEventListener('resize', layoutPanels);
+
   function openPanel(panel: HTMLElement) {
     panel.style.maxHeight = panel.scrollHeight + 'px';
     const card = getCard(panel.dataset.for!);
